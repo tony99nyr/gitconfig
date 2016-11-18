@@ -1,0 +1,39 @@
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	required = true
+[user]
+	name = Tony Rossi
+	email = tony@iamrossi.com
+[alias]
+	st = status
+	sl = status && git lg
+	linefix = "!cd ${GIT_PREFIX:-.} && pwd && dos2unix $1 && git add $1 && git commit -m 'git p4 line ending fix $1'"
+	p = !pwd && cd ${GIT_PREFIX:-.} && pwd
+	ignore = "!git update-index --assume-unchanged $1"
+	unignore = "!git update-index --no-assume-unchanged $1"
+	ignored = !git ls-files -v | grep "^[[:lower:]]"
+	p4llmaster = "!export branch=$(git symbolic-ref HEAD --short) && echo 'Will return to:' $branch && git checkout master && git p4ll && git checkout $branch && git rebase master"
+	p4ll = !git p4 sync && git p4 rebase
+	p4shmaster = !export branch=$(git symbolic-ref HEAD --short) && git p4ll && git checkout master && git rebase $branch && git p4 submit && git checkout $branch && git rebase master
+	p4sh = !git p4ll && git p4 submit
+	dev = !git checkout develop
+	lg = !git log p4/master..$branch
+	cm = "!git add --all && git commit"
+	co = checkout
+	stashp4ll = "!git stash && git p4ll && git stash apply"
+	
+[diff]
+    tool = kdiff3
+
+[merge]
+    tool = kdiff3
+
+[mergetool "kdiff3"]
+    path = C:/Program Files/KDiff3/kdiff3.exe
+    keepBackup = false
+    trustExitCode = false
+[core]
+	autocrlf = true
+[git-p4]
+	skipSubmitEdit = true
